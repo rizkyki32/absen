@@ -62,12 +62,9 @@
                             <br>
                             <br>
                             @if (!empty($presence_in->date_time))
-                                @if (empty($presence_out->date_time))
                                 <input type="button" class="btn btn-info" value="Ambil Foto" onClick="take_snapshot()">
-                                <button class="btn btn-success">Absen Sekarang</button>
-                                @else
-                                <p><b>*Anda sudah melakukan absen keluar!<b></p>
-                                @endif
+                                <button class="btn btn-danger">Absen Sekarang</button>
+                                <p>Jumlah absensi keluar hari ini : {{$presence_out}}</p>
                             @else
                                 <p><b>*Anda belum melakukan absen masuk!<b></p>
                             @endif

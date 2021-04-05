@@ -64,10 +64,29 @@
                                 @endif
                             </div>
                         </div>
+                        <input type="hidden" name="latitude" class="latitude-tag">
+                        <input type="hidden" name="longitude" class="longitude-tag">
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+@endsection
+
+@section('footer-scripts')
+<script src="{{asset('webcam/webcam.js')}}"></script>
+
+<script>
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else { 
+        x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+
+    function showPosition(position) {
+        document.getElementsByClassName("latitude-tag")[0].setAttribute("value", position.coords.latitude);
+        document.getElementsByClassName("longitude-tag")[0].setAttribute("value", position.coords.longitude);
+    }
+</script>
 @endsection

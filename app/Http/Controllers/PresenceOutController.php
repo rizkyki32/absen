@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use DB;
 
 class PresenceOutController extends Controller
 {
@@ -20,9 +21,12 @@ class PresenceOutController extends Controller
     {
         //
         $id_user = \Auth::user()->id;
-        $user_date_now_in = \App\Models\Presence::where('id_user', $id_user)->where('date_time', 'LIKE', '%' . date('Y-m-d') . '%')->where('status','IN')->first();
-        $user_date_now_out = \App\Models\Presence::where('id_user', $id_user)->where('date_time', 'LIKE', '%' . date('Y-m-d') . '%')->where('status','OUT')->first();
-        return view('presence_out.index', ['presence_in' => $user_date_now_in, 'presence_out' => $user_date_now_out]);
+        $user_date_now_in = \App\Models\Presence::where('id_user', $id_user)->where('date_time', 'LIKE', '%' . date('Y-m-d') . '%')->where('status', 'IN')->first();
+        $presence_out = DB::table('presences')
+            ->where('id_user', '=', $id_user)
+            ->where('date_time', 'LIKE', '%' . date('Y-m-d') . '%')->where('status', 'OUT')
+            ->count();
+        return view('presence_out.index', ['presence_in' => $user_date_now_in, 'presence_out' => $presence_out]);
     }
 
     /**
@@ -61,16 +65,16 @@ class PresenceOutController extends Controller
         $fileName = uniqid() . '.png';
         $file = $folderPath . $fileName;
         file_put_contents($file, $image_base64);
-        
+
         $new_presence = new \App\Models\Presence;
         $new_presence->id_user = \Auth::user()->id;
         $new_presence->photo = $fileName;
         $new_presence->latitude = $latitude;
         $new_presence->longitude = $longitude;
-        $new_presence->date_time = date("Y-m-d H:i:s");  
-        $new_presence->status = 'OUT';      ;
+        $new_presence->date_time = date("Y-m-d H:i:s");
+        $new_presence->status = 'OUT';;
         $new_presence->save();
-        return redirect()->route('presence_out.index')->with('status', 'Berhasil melakukan absen keluar!');
+        return redirect()->route('presence_list.index')->with('status', 'Berhasil melakukan absen keluar!');
     }
 
     /**
