@@ -1,0 +1,135 @@
+@extends("layouts.global")
+
+@section("title") Absen Masuk @endsection
+
+@section("content")
+
+<style>
+    #results {
+        padding: 20px;
+        border: 1px solid;
+        background: #ccc;
+    }
+
+    @media (max-width: 576px) {
+        #my_camera video {
+            padding-left: 200px;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        #results img {
+            max-width: 80%;
+            max-height: 80%;
+        }
+    }
+</style>
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Absen Masuk</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Starter Page</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="{{route('presence_in.store')}}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div id="my_camera"></div>
+                            <br>
+                            <input type="hidden" name="image" class="image-tag">
+                            <input type="text" name="latitude" class="latitude-tag" readonly>
+                            <input type="text" name="longitude" class="longitude-tag" readonly>
+                            <br>
+                            <br>
+                            @if (empty($presence->date_time))
+                            <input type="button" class="btn btn-info" value="Ambil Foto" onClick="take_snapshot()">
+                            <button class="btn btn-success">Absen Sekarang</button>
+                            @else
+                                <p><b>*Anda sudah melakukan absen masuk!<b></p>
+                            @endif
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-12 col-md-12 col-lg-6 mb-3">
+                    <div id="results">Your captured image will appear here...</div>
+                </div>
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+<!-- Control Sidebar -->
+<aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+    <div class="p-3">
+        <h5>Title</h5>
+        <p>Sidebar content</p>
+    </div>
+</aside>
+<!-- /.control-sidebar -->
+
+@endsection
+
+@section('footer-scripts')
+<script src="{{asset('webcam/webcam.js')}}"></script>
+
+<script>
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else { 
+        x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+
+    function showPosition(position) {
+        document.getElementsByClassName("latitude-tag")[0].setAttribute("value", position.coords.latitude);
+        document.getElementsByClassName("longitude-tag")[0].setAttribute("value", position.coords.longitude);
+    }
+
+    Webcam.set({
+            width: 325,
+            height: 290,
+            image_format: 'jpeg',
+            jpeg_quality: 90,
+            flip_horiz: true,
+            // constraints: {
+            //     width: 320, // { exact: 320 },
+            //     height: 180, // { exact: 180 },
+            //     facingMode: 'environment',
+            //     frameRate: 30
+            // }
+        });
+
+        Webcam.attach('#my_camera');
+
+        function take_snapshot() {
+            Webcam.snap(function(data_uri) {
+                $(".image-tag").val(data_uri);
+                document.getElementById('results').innerHTML = '<img src="' + data_uri + '"/>';
+            });
+        }
+</script>
+@endsection
