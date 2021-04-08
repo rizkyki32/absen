@@ -64,8 +64,8 @@
                                 @endif
                             </div>
                         </div>
-                        <input type="hidden" name="latitude" class="latitude-tag">
-                        <input type="hidden" name="longitude" class="longitude-tag">
+                        <input type="text" name="latitude" class="latitude-tag">
+                        <input type="text" name="longitude" class="longitude-tag">
                     </form>
                 </div>
             </div>

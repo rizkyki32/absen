@@ -9,7 +9,10 @@
 @section("title") Daftar Absensi @endsection
 
 @section("content")
-
+<!-- Preloader -->
+<div class="preloader flex-column justify-content-center align-items-center">
+    <img class="animation__shake" src="{{asset('adminlte/dist/img/AdminLTELogo.png')}}" alt="AdminLTELogo" height="60" width="60">
+  </div>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->

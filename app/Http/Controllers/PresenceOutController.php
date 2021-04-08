@@ -74,7 +74,7 @@ class PresenceOutController extends Controller
         $new_presence->date_time = date("Y-m-d H:i:s");
         $new_presence->status = 'OUT';;
         $new_presence->save();
-        return redirect()->route('presence_list.index')->with('status', 'Berhasil melakukan absen keluar!');
+        return redirect()->route('presence_out.index')->with('status', 'Berhasil melakukan absen keluar!');
     }
 
     /**

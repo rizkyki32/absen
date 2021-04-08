@@ -2,6 +2,11 @@
 
 @section("title") Absen Keluar @endsection
 
+@section('header-scripts')
+<script src="{{asset('swal2/dist/sweetalert2.min.js')}}"></script>
+<link rel="stylesheet" href="{{asset('swal2/dist/sweetalert2.min.css')}}">
+@endsection
+
 @section("content")
 
 <style>
@@ -24,6 +29,14 @@
         }
     }
 </style>
+
+@if(session('status'))
+<div class="flash-data" data-flashdata="{{session('status')}}"></div>
+@endif
+
+@if ($errors->first('image'))
+<div class="flash-data-error" data-flashdata="{{$errors->first('image')}}"></div>
+@endif
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -53,22 +66,22 @@
                     <div class="card">
                         <div class="card-body">
                             <form action="{{route('presence_out.store')}}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            <div id="my_camera"></div>
-                            <br>
-                            <input type="hidden" name="image" class="image-tag">
-                            <input type="text" name="latitude" class="latitude-tag">
-                            <input type="text" name="longitude" class="longitude-tag">
-                            <br>
-                            <br>
-                            @if (!empty($presence_in->date_time))
+                                @csrf
+                                <div id="my_camera"></div>
+                                <br>
+                                <input type="hidden" name="image" class="image-tag">
+                                <input type="text" name="latitude" class="latitude-tag">
+                                <input type="text" name="longitude" class="longitude-tag">
+                                <br>
+                                <br>
+                                @if (!empty($presence_in->date_time))
                                 <input type="button" class="btn btn-info" value="Ambil Foto" onClick="take_snapshot()">
                                 <button class="btn btn-danger">Absen Sekarang</button>
                                 <p>Jumlah absensi keluar hari ini : {{$presence_out}}</p>
-                            @else
+                                @else
                                 <p><b>*Anda belum melakukan absen masuk!<b></p>
-                            @endif
-                            
+                                @endif
+
                         </div>
                     </div>
 
@@ -97,6 +110,7 @@
 @endsection
 
 @section('footer-scripts')
+<script src="{{asset('js/swal2.js')}}"></script>
 <script src="{{asset('webcam/webcam.js')}}"></script>
 
 <script>

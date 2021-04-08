@@ -42,25 +42,50 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+    public function getIp()
+    {
+        foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key) {
+            if (array_key_exists($key, $_SERVER) === true) {
+                foreach (explode(',', $_SERVER[$key]) as $ip) {
+                    $ip = trim($ip); // just to be safe
+                    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false) {
+                        return $ip;
+                    }
+                }
+            }
+        }
+        return request()->ip(); // it will return server ip when no client ip found
+    }
+
     protected function validateLogin(Request $request)
     {
-        $min_lat = abs(-6.326000000000000);
-        $max_lat = abs(-6.327000000000000);
+        $ip = $this->getIp();
 
-        $min_long = 106.86800000000000;
-        $max_long = 106.86890000000000;
+        $is_wfo = 0;
 
-        $lat = abs($request->latitude);
-        $long = abs($request->longitude);
-        
+        // $min_lat = abs(-6.326000000000000);
+        // $max_lat = abs(-6.327000000000000);
+
+        // $min_long = 106.86800000000000;
+        // $max_long = 106.86890000000000;
+
+        // $lat = abs($request->latitude);
+        // $long = $request->longitude;
+
         // Get the user details from database and check if user is exist and active.
         $user = User::where('email', $request->email)->first();
         if ($user && $user->status == 'INACTIVE') {
             throw ValidationException::withMessages([$this->username() => __('User has been desactivated.')]);
         }
 
-        if (!($lat >= $min_lat AND $lat <= $max_lat AND $long >= $min_long AND $long <= $max_long)) {
-            throw ValidationException::withMessages([$this->username() => __('Bukan diarea kantor.')]);
+        // if (!($lat >= $min_lat and $lat <= $max_lat and $long >= $min_long and $long <= $max_long)) {
+        //     throw ValidationException::withMessages([$this->username() => __('Not in the office area.')]);
+        // }
+
+        if ($is_wfo == 1) {
+            if (!str_contains($ip, '192.168.103')) {
+                throw ValidationException::withMessages([$this->username() => __('Not use office network.')]);
+            }
         }
 
         // Then, validate input.

@@ -13,7 +13,7 @@
 
 <style>
     #mapid {
-        width: 600px;
+        width: 400px;
         height: 300px;
     }
 
@@ -57,31 +57,38 @@
                         </div> --}}
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <table class="table">
-                                <tr>
-                                    <td>Nama</td>
-                                    <td>:</td>
-                                    <td>{{ $presence_row->name }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Waktu</td>
-                                    <td>:</td>
-                                    <td>{{ $presence_row->date_time }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Status</td>
-                                    <td>:</td>
-                                    <td>{{ $presence_row->status }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Foto</td>
-                                    <td>:</td>
-                                    <td><img src="{{ asset('presence_uploads/'.$presence_row->photo) }}"
-                                            alt="" height="50"></td>
-                                </tr>
-                            </table>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tr>
+                                        <td>Nama</td>
+                                        <td>:</td>
+                                        <td>{{ $presence_row->name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Waktu</td>
+                                        <td>:</td>
+                                        <td>{{ $presence_row->date_time }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Status</td>
+                                        <td>:</td>
+                                        <td>{{ $presence_row->status }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Foto</td>
+                                        <td>:</td>
+                                        <td><img src="{{ asset('presence_uploads/'.$presence_row->photo) }}" alt=""
+                                                height="50"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan=3>
+                                            <div id="mapid"></div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
 
-                            <div id="mapid"></div>
+
                         </div>
                     </div>
                 </div>

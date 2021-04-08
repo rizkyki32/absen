@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PresenceInController;
 use App\Http\Controllers\PresenceOutController;
 use App\Http\Controllers\PresenceListController;
+use App\Http\Controllers\ScheduleController;
+
+use App\Http\Controllers\FullCalenderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,3 +32,11 @@ Route::resource('presence_out', PresenceOutController::class);
 
 Route::get('/presence_list/json', [PresenceListController::class, 'json']);
 Route::resource('presence_list', PresenceListController::class);
+
+Route::get('/schedule_json', [ScheduleController::class, 'schedule_json']);
+Route::get('/schedule_manage', [ScheduleController::class, 'schedule_manage']);
+Route::post('/import_action', [ScheduleController::class, 'import_action'])->name('import_action');
+Route::resource('schedule', ScheduleController::class);
+
+Route::get('fullcalender', [FullCalenderController::class, 'index']);
+Route::post('fullcalenderAjax', [FullCalenderController::class, 'ajax']);

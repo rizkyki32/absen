@@ -8,7 +8,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Absen @yield("title")</title>
+  <title>@yield("title")</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet"
@@ -17,12 +17,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="{{asset('adminlte/plugins/fontawesome-free/css/all.min.css')}}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{asset('adminlte/dist/css/adminlte.min.css')}}">
-  
+
   @yield('header-scripts')
 
 </head>
 
 <body class="hold-transition sidebar-mini">
+
   <div class="wrapper">
 
     <!-- Navbar -->
@@ -228,6 +229,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <p>Absen List</p>
                   </a>
                 </li>
+                <li class="nav-item">
+                  <a href="{{route('schedule.index')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Schedule</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url('/schedule_manage')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Schedule Manage</p>
+                  </a>
+                </li>
               </ul>
             </li>
             <li class="nav-item">
@@ -240,7 +253,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </a>
               <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                 @csrf
-            </form>
+              </form>
             </li>
           </ul>
         </nav>
@@ -266,11 +279,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- REQUIRED SCRIPTS -->
 
   <!-- jQuery -->
+  {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> --}}
   <script src="{{asset('adminlte/plugins/jquery/jquery.min.js')}}"></script>
   <!-- Bootstrap 4 -->
   <script src="{{asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+  {{-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" /> --}}
   <!-- AdminLTE App -->
   <script src="{{asset('adminlte/dist/js/adminlte.min.js')}}"></script>
+  
   @yield('footer-scripts')
 </body>
 
