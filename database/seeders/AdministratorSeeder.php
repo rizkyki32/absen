@@ -22,6 +22,7 @@ class AdministratorSeeder extends Seeder
         $administrator->password = \Hash::make("password");
         $administrator->avatar = "admin.png";
         $administrator->address = "Cipondoh, Tangerang";
+        $administrator->nip = "12345";
 
         $administrator->save();
 
