@@ -6,16 +6,26 @@ use App\Models\Schedule;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
-use DB;
+// use Illuminate\Contracts\Queue\ShouldQueue; //IMPORT SHOUDLQUEUE
+// use Maatwebsite\Excel\Concerns\WithChunkReading; //IMPORT CHUNK READING
 
+use DB;
+// , WithChunkReading, ShouldQueue
 class SchedulesImport implements ToModel, WithStartRow
 {
+    private $month;
+
+    public function __construct(String $month)
+    {
+        $this->month = $month;
+    }
+    
     /**
      * @return int
      */
     public function startRow(): int
     {
-        return 2;
+        return 3;
     }
 
     /**
@@ -27,15 +37,22 @@ class SchedulesImport implements ToModel, WithStartRow
     {
         $array = array();
         for ($i = 1; $i <= 31; $i++) {
-            if ($row[$i] != NULL) {
-                $array[] = array(
-                    'id_user' => $row[0],
-                    'start' => date_create($row[1] . '-' . sprintf("%02d", $i)),
-                    'id_schedule_type' => $row[$i + 1]
-                );
-            }
+            $array[] = array(
+                'nip' => $row[0],
+                'id_schedule_type' => $row[$i],
+                'start' => date_create($this->month . '-' . sprintf("%02d", $i))
+            );
         }
+
+        // dd($array);
+        // die;
         // $insertSchedule->save();
         DB::table('schedules')->insert($array);
     }
+
+    //LIMIT CHUNKSIZE
+    // public function chunkSize(): int
+    // {
+    //     return 1000; //ANGKA TERSEBUT PERTANDA JUMLAH BARIS YANG AKAN DIEKSEKUSI
+    // }
 }

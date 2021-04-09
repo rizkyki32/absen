@@ -1,6 +1,6 @@
 @extends("layouts.global")
 
-@section("title")Add Schedule @endsection
+@section("title")Edit Schedule @endsection
 
 @section('header-scripts')
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -23,7 +23,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Add Schedule</h1>
+                    <h1 class="m-0">Edit Schedule</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -49,30 +49,34 @@
                         </div> --}}
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form action="{{route('schedule.store')}}" method="POST">
+                        <form action="{{route('schedule.update', [$schedule->id])}}" method="POST">
                             @csrf
+
+                            <input type="hidden" value="PUT" name="_method">
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="">Nama</label>
                                     <select name="nip" data-live-search="true" id="nip" class="form-control"></select>
+                                        {{-- @foreach ($users as $u)
+                                            <option value="{{ $u->nip }}"
+                                                {{ ($schedule->nip == $u->nip) ? 'selected' : ''}} 
+                                                >{{ $u->name }}</option>
+                                        @endforeach --}}
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="">Status</label>
                                     <select name="id_schedule_type" id="" class="form-control">
                                         @foreach ($schedule_types as $st)
-                                        <option value="{{ $st->id }}" @if (old('id_schedule_type')==$st->id)
-                                            selected
-                                            @endif>{{ $st->schedule_type_name }}</option>
+                                            <option value="{{ $st->id }}" {{ ($schedule->id_schedule_type == $st->id) ? 'selected' : ''}}>{{ $st->schedule_type_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="">Tanggal</label>
-                                    <input name="start" type="date"
-                                        class="form-control {{$errors->first('start') ? "is-invalid" : ""}}"
-                                        value="{{old('start')}}">
+                                    <input name="start" type="date" class="form-control {{$errors->first('start') ? "is-invalid" : ""}}" value="{{old('start') ? old('start') : $schedule->start}}">
                                 </div>
-                                <div class="invalid-feedback d-block">
+                                <div class="invalid-feedback d-block"> 
                                     {{$errors->first('start')}}
                                 </div>
                             </div>
@@ -95,7 +99,6 @@
 @endsection
 
 @section('footer-scripts')
-<!-- Latest compiled and minified JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 <script src="{{asset('js/swal2.js')}}"></script>
 <script>
@@ -118,13 +121,7 @@
                 dataType: "json",
                 success: function (data) {
                     var html = "";
-                    
-                    if("{{ old('nip') }}"){
-                        var old_nip = "{{ old('nip') }}";
-                    } else{
-                        var old_nip = "";
-                    }
-
+                    var old_nip = "{{ $schedule->nip }}";
                     for (var count = 0; count < data.length; count++) {
                         html += `<option value="${data[count].nip}" ${(data[count].nip == old_nip) ? "selected" : ""}>${data[count].name}</option>`;
                     }

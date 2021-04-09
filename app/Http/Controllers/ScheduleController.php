@@ -9,7 +9,7 @@ use App\Imports\SchedulesImport;
 
 use DB;
 use DataTables;
-
+use App\Jobs\ImportJob;
 
 class ScheduleController extends Controller
 {
@@ -83,15 +83,15 @@ class ScheduleController extends Controller
     public function schedule_json()
     {
         $data = DB::table('calendar_view');
-        return Datatables::of($data)->order(function ($query){
-            $query->orderBy('id','desc');
+        return Datatables::of($data)->order(function ($query) {
+            $query->orderBy('id', 'desc');
         })->addIndexColumn()
             ->addColumn('action', function ($row) {
-                $btn = '<a href="'.route('schedule.edit', [$row->id]).'" class="btn btn-primary">Edit</a>
+                $btn = '<a href="' . route('schedule.edit', [$row->id]) . '" class="btn btn-primary">Edit</a>
                 
-                <a href="#" data-title="'.$row->title.'" class="btn btn-danger swal-confirm" onclick="deleteConfirmation('.$row->id.')">
-                <form class="d-inline" action="'.route('schedule.destroy', $row->id).'" id="delete'.$row->id.'" method="POST">
-                    '.csrf_field().'
+                <a href="#" data-title="' . $row->title . '" class="btn btn-danger swal-confirm" onclick="deleteConfirmation(' . $row->id . ')">
+                <form class="d-inline" action="' . route('schedule.destroy', $row->id) . '" id="delete' . $row->id . '" method="POST">
+                    ' . csrf_field() . '
                     <input type="hidden" name="_method" value="DELETE">
                 </form>
                     Delete
@@ -110,25 +110,43 @@ class ScheduleController extends Controller
 
     public function import_action(Request $request)
     {
+        $month = $request->get('month');
         // validasi
         $this->validate($request, [
-            'file' => 'required|mimes:csv,xls,xlsx'
+            'file' => 'required|mimes:csv,xls,xlsx',
+            'month' => 'required'
         ]);
 
-        // menangkap file excel
+        // upload file / get file
         $file = $request->file('file');
 
         // membuat nama file unik
-        $nama_file = rand() . $file->getClientOriginalName();
+		$nama_file = rand().$file->getClientOriginalName();
 
-        // upload ke folder file_schedule di dalam folder public
-        $file->move('file_schedule', $nama_file);
+		// upload ke folder file_siswa di dalam folder public
+		$file->move('file_schedule',$nama_file);
 
-        // import data
-        Excel::import(new SchedulesImport, public_path('/file_schedule/' . $nama_file));
+        // import file
+        Excel::import(new SchedulesImport($month), public_path('/file_schedule/'.$nama_file));  
+        //MENGHAPUS FILE EXCEL YANG TELAH DI-UPLOAD
+        // unlink(public_path('/file_schedule/'.$nama_file)); 
+        return redirect('/schedule_manage')->with('status', 'Import data berhasil!');
+    }
 
-        // alihkan halaman kembali dan notifikasi dengan session
-        return redirect('/schedule_manage')->with('status', 'Import data berhasil!'); ;
+    public function user_json(Request $request)
+    {
+        if ($request->get('type')) {
+            if ($request->get('type') == "userData") {
+                $sqlQuery = DB::table('users')->get();
+                foreach($sqlQuery as $row){
+                    $output[] = [
+                        'nip' => $row->nip,
+                        'name' => $row->name,
+                    ];
+                }
+                echo json_encode($output); 
+            }
+        }
     }
 
     /**
@@ -153,17 +171,17 @@ class ScheduleController extends Controller
     {
         //
         \Validator::make($request->all(), [
-            "id_user" => "required",
+            "nip" => "required",
             "id_schedule_type" => "required",
             "start" => "required",
         ])->validate();
 
-        $id_user = $request->get('id_user');
+        $nip = $request->get('nip');
         $id_schedule_type = $request->get('id_schedule_type');
         $start = $request->get('start');
 
         $new_schedule = new \App\Models\Schedule;
-        $new_schedule->id_user = $id_user;
+        $new_schedule->nip = $nip;
         $new_schedule->id_schedule_type = $id_schedule_type;
         $new_schedule->start = $start;
         $new_schedule->save();
@@ -191,6 +209,11 @@ class ScheduleController extends Controller
     public function edit($id)
     {
         //
+        $users = DB::table('users')->get();
+        $schedule_types = DB::table('schedule_types')->get();
+        $schedule_to_edit = \App\Models\Schedule::findOrFail($id);
+
+        return view('schedule.edit', ['users' => $users, 'schedule_types' => $schedule_types, 'schedule' => $schedule_to_edit]);
     }
 
     /**
@@ -203,6 +226,25 @@ class ScheduleController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $nip = $request->get('nip');
+        $id_schedule_type = $request->get('id_schedule_type');
+        $start = $request->get('start');
+
+        $schedule = \App\Models\Schedule::findOrFail($id);
+
+        \Validator::make($request->all(), [
+            "nip" => "required",
+            "id_schedule_type" => "required",
+            "start" => "required",
+        ])->validate();
+
+        $schedule->nip = $nip;
+        $schedule->id_schedule_type = $id_schedule_type;
+        $schedule->start = $start;
+
+        $schedule->save();
+
+        return redirect()->route('schedule.edit', [$id])->with('status', 'Schedule successfully updated');
     }
 
     /**

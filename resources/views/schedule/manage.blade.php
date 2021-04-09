@@ -20,6 +20,13 @@
 <div class="flash-data" data-flashdata="{{session('status')}}"></div>
 @endif
 
+@if ($errors->first('file'))
+<div class="flash-data-error" data-flashdata="{{$errors->first('file')}}"></div>
+@endif
+@if ($errors->first('month'))
+<div class="flash-data-error" data-flashdata="{{$errors->first('month')}}"></div>
+@endif
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -102,7 +109,11 @@
 
                     <label>Pilih file excel</label>
                     <div class="form-group">
-                        <input type="file" name="file" required="required">
+                        <input type="file" name="file" required>
+                    </div>
+                    <label>Pilih bulan</label>
+                    <div class="form-group">
+                        <input type="month" class="form-control" name="month" required>
                     </div>
 
                 </div>
