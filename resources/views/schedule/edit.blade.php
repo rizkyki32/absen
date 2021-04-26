@@ -42,6 +42,15 @@
             <div class="row">
                 <!-- left column -->
                 <div class="col-md-6">
+                    @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
                     <!-- general form elements -->
                     <div class="card card-primary">
                         {{-- <div class="card-header">
@@ -78,6 +87,13 @@
                                 </div>
                                 <div class="invalid-feedback d-block"> 
                                     {{$errors->first('start')}}
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Open ?</label>
+                                    <select id="" class="form-control" name="is_open"> 
+                                        <option value="0">Tidak</option>
+                                        <option value="1" {{ ($schedule->is_open == "1") ? 'selected' : '' }}>Ya</option>
+                                    </select>
                                 </div>
                             </div>
                             <!-- /.card-body -->

@@ -63,31 +63,16 @@
                             @csrf
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label for="">Department</label>
-                                    <select name="department" id="department" class="form-control" data-live-search="true"
-                        title="Department"></select>
-                                </div>
-                                <div class="form-group">
                                     <label for="">Nama</label>
-                                    <select name="nip" id="nip" class="form-control" data-live-search="true" title="Name"></select>
+                                    <select name="nip" data-live-search="true" id="nip" class="form-control" title="Nama"></select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="">Tipe Jadwal</label>
+                                    <label for="">Status</label>
                                     <select name="id_schedule_type" id="" class="form-control">
-                                        @foreach ($schedule_type as $st)
+                                        @foreach ($schedule_types as $st)
                                         <option value="{{ $st->id }}" @if (old('id_schedule_type')==$st->id)
                                             selected
                                             @endif>{{ $st->schedule_type_name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Tipe Shift</label>
-                                    <select name="id_shift" id="" class="form-control">
-                                        @foreach ($shift as $sh)
-                                        <option value="{{ $sh->id }}" @if (old('id_shift')==$sh->id)
-                                            selected
-                                            @endif>{{ $sh->nama_shift }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -137,46 +122,34 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             } 
         });
-        $('#department').selectpicker();
-        $('#nip').selectpicker();
         var SITEURL = "{{ url('/') }}";
+        $('#id_user').selectpicker();
 
-        load_data("department_data");
+        load_data("userData");
 
-        function load_data(type, id_department = ''){
+        function load_data(type){
             $.ajax({
                 url: SITEURL + "/schedule/user_json",
                 method: "POST",
-                data: { type: type, id_department: id_department},
+                data: { type: type},
                 dataType: "json",
                 success: function (data) {
-                    var html = '';                         
+                    var html = "";
+                    
+                    if("{{ old('nip') }}"){
+                        var old_nip = "{{ old('nip') }}";
+                    } else{
+                        var old_nip = "";
+                    }
 
-                    for(var count = 0; count < data.length; count++)
-                    {
-                        html += `<option value="`+data[count].id+`">`+data[count].name+`</option>`;
+                    for (var count = 0; count < data.length; count++) {
+                        html += `<option value="${data[count].nip}" ${(data[count].nip == old_nip) ? "selected" : ""}>${data[count].name}</option>`;
                     }
-                    if(type == 'department_data')
-                    {
-                        $('#department').html(html);
-                        $('#department').selectpicker('refresh');
+                    if (type == "userData") {
+                        $("#nip").html(html);
+                        $("#nip").selectpicker("refresh");
                     }
-                    else
-                    {
-                        $('#nip').html(html);
-                        $('#nip').selectpicker('refresh');
-                    }
-            
-                    $(document).on('change', '#department', function(){
-                        var id_department = $('#department').val();
-                        load_data('name', id_department);
-                    });
-
                 },
-                error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    $('#nip').val('');
-                    return alert("Silahkan pilih department lain : " + errorThrown);
-                }
             });
         }
     });

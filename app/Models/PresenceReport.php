@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PresenceList extends Model
+class PresenceReport extends Model
 {
     use HasFactory;
-    protected $table = 'presence_list';
+    protected $table = 'presence_report_user';
 }

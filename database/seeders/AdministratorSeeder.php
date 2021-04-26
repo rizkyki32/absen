@@ -27,5 +27,21 @@ class AdministratorSeeder extends Seeder
         $administrator->save();
 
         $this->command->info("User Admin berhasil diinsert");
+
+        // stress test
+        // for ($i = 0; $i <= 10000; $i++) {
+        //     $administrator = new \App\Models\User;
+        //     $administrator->username = "administrator" . $i;
+        //     $administrator->id_department = 2;
+        //     $administrator->name = "Site Administrator" . $i;
+        //     $administrator->email = "admin@email.com" . $i;
+        //     $administrator->roles = json_encode(["ADMIN"]);
+        //     $administrator->password = \Hash::make("password");
+        //     $administrator->avatar = "admin.png";
+        //     $administrator->address = "Cipondoh, Tangerang";
+        //     $administrator->nip = "1234" . $i;
+
+        //     $administrator->save();
+        // }
     }
 }

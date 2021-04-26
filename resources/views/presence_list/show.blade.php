@@ -16,13 +16,6 @@
         width: 400px;
         height: 300px;
     }
-
-    /* @media (max-width: 576px) {
-        #mapid {
-            max-width: 50%;
-            max-height: 30%;
-        }
-    } */
 </style>
 @section("content")
 

@@ -1,32 +1,23 @@
 @extends("layouts.global")
-
-@section("title")Manage Schedule @endsection
-
 @section('header-scripts')
-<!-- DataTables -->
-<link rel="stylesheet" href="{{asset('adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
 <script src="{{asset('swal2/dist/sweetalert2.min.js')}}"></script>
 <link rel="stylesheet" href="{{asset('swal2/dist/sweetalert2.min.css')}}">
+<!-- DataTables -->
+<link rel="stylesheet" href="{{asset('adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
 @endsection
 
+@section("title")Schedule Type @endsection
+
 @section("content")
-{{-- <!-- Preloader -->
-<div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__shake" src="{{asset('adminlte/dist/img/AdminLTELogo.png')}}" alt="AdminLTELogo" height="60"
-        width="60">
-</div> --}}
 
 @if(session('status'))
 <div class="flash-data" data-flashdata="{{session('status')}}"></div>
 @endif
 
-@if ($errors->first('file'))
-<div class="flash-data-error" data-flashdata="{{$errors->first('file')}}"></div>
-@endif
-@if ($errors->first('month'))
-<div class="flash-data-error" data-flashdata="{{$errors->first('month')}}"></div>
-@endif
-
+<!-- Preloader -->
+<div class="preloader flex-column justify-content-center align-items-center">
+    <img class="animation__shake" src="{{asset('adminlte/dist/img/AdminLTELogo.png')}}" alt="AdminLTELogo" height="60" width="60">
+  </div>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -34,7 +25,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Manage Schedule</h1>
+                    <h1 class="m-0">Daftar Schedule Type</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -51,8 +42,7 @@
     <div class="content">
         <div class="container-fluid">
             <div class="btn-group mb-3">
-                <a href="{{route('schedule.create')}}" class="btn btn-success">TAMBAH</a>
-                <a href="" class="btn btn-info" data-toggle="modal" data-target="#importExcel">IMPORT</a>
+                <a href="{{route('schedule_type.create')}}" class="btn btn-success">TAMBAH</a>
             </div>
             <div class="row">
                 <div class="col-12">
@@ -66,14 +56,10 @@
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Nama</th>
-                                        <th>Email</th>
-                                        <th>Department</th>
-                                        <th>Tanggal</th>
-                                        <th>Open</th>
-                                        <th>Tipe Jadwal</th>
-                                        <th>Tipe Shift</th>
-                                        <th>Tipe Izin</th>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Background Color</th>
+                                        <th>Border Color</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -100,36 +86,6 @@
 </aside>
 <!-- /.control-sidebar -->
 
-<!-- Import Excel -->
-<div class="modal fade" id="importExcel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <form method="post" action="{{route('import_action')}}" enctype="multipart/form-data">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Import Excel</h5>
-                </div>
-                <div class="modal-body">
-
-                    @csrf
-
-                    <label>Pilih file excel</label>
-                    <div class="form-group">
-                        <input type="file" name="file" required>
-                    </div>
-                    <label>Pilih bulan</label>
-                    <div class="form-group">
-                        <input type="month" class="form-control" name="month" required>
-                    </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Import</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
 @endsection
 
 @section('footer-scripts')
@@ -142,18 +98,18 @@
     $("#example1").DataTable({
         processing: true,
         serverSide: true,
-        ajax: 'schedule_json',
+        ajax: 'schedule_type/json',
         columns: [
-            { data: 'name', name: 'name'},
-            { data: 'email', name: 'email'},
-            { data: 'department_name', name: 'department_name'},
-            { data: 'start', name: 'start'},
-            { data: 'is_open', name: 'is_open'},
+            { data: 'id', name: 'id'},
             { data: 'schedule_type_name', name: 'schedule_type_name'},
-            { data: 'nama_shift', name: 'nama_shift'},
-            { data: 'leave_name', name: 'leave_name'},
+            { data: 'backgroundColor', name: 'backgroundColor'},
+            { data: 'borderColor', name: 'borderColor'},
             { data: 'action', name: 'action', orderable: false, searchable: false},
-        ]
+        ],
+        createdRow: function ( row, data, index ) {
+            $('td', row).eq(2).css('background-color', data.backgroundColor);
+            $('td', row).eq(3).css('background-color', data.borderColor);
+        }
     })
 });
 </script>

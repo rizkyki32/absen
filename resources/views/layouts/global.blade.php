@@ -206,7 +206,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-th"></i>
                 <p>
-                  Menu
+                  Absen
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
@@ -229,16 +229,68 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <p>Absen List</p>
                   </a>
                 </li>
+              </ul>
+            </li>
+            <li class="nav-item menu-open">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                  Jadwal
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="{{route('schedule.index')}}" class="nav-link">
+                  <a href="{{route('shift.index')}}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Schedule</p>
+                    <p>Shift</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{route('leave.index')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Izin</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url('/schedule_type')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Schedule Type</p>
                   </a>
                 </li>
                 <li class="nav-item">
                   <a href="{{url('/schedule_manage')}}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Schedule Manage</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{route('schedule.index')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Schedule Calendar</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item menu-open">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                  Laporan
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{url('/presence_report/'.\Auth::user()->id)}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Report</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>All Report</p>
                   </a>
                 </li>
               </ul>

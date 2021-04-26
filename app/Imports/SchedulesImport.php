@@ -40,7 +40,8 @@ class SchedulesImport implements ToModel, WithStartRow
             $array[] = array(
                 'nip' => $row[0],
                 'id_schedule_type' => $row[$i],
-                'start' => date_create($this->month . '-' . sprintf("%02d", $i))
+                'start' => date_create($this->month . '-' . sprintf("%02d", $i)),
+                'is_open' => 0,
             );
         }
 

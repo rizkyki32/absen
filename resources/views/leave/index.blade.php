@@ -1,14 +1,18 @@
 @extends("layouts.global")
 @section('header-scripts')
+<script src="{{asset('swal2/dist/sweetalert2.min.js')}}"></script>
+<link rel="stylesheet" href="{{asset('swal2/dist/sweetalert2.min.css')}}">
 <!-- DataTables -->
 <link rel="stylesheet" href="{{asset('adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
-{{-- <link rel="stylesheet" href="../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-<link rel="stylesheet" href="../../plugins/datatables-buttons/css/buttons.bootstrap4.min.css"> --}}
 @endsection
 
-@section("title")Daftar Absensi @endsection
+@section("title")Izin @endsection
 
 @section("content")
+@if(session('status'))
+<div class="flash-data" data-flashdata="{{session('status')}}"></div>
+@endif
+
 <!-- Preloader -->
 <div class="preloader flex-column justify-content-center align-items-center">
     <img class="animation__shake" src="{{asset('adminlte/dist/img/AdminLTELogo.png')}}" alt="AdminLTELogo" height="60"
@@ -21,7 +25,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Daftar Absensi</h1>
+                    <h1 class="m-0">Izin</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -38,8 +42,7 @@
     <div class="content">
         <div class="container-fluid">
             <div class="btn-group mb-3">
-                <a href="{{url('presence_search')}}" class="btn btn-success">SEARCH ALL</a>
-                <a href="{{route('presence_history.index')}}" class="btn btn-info">HISTORY ALL</a>
+                <a href="{{route('leave.create')}}" class="btn btn-success">TAMBAH</a>
             </div>
             <div class="row">
                 <div class="col-12">
@@ -53,17 +56,8 @@
                                 <table id="example1" class="table table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Department</th>
-                                            <th>Waktu</th>
-                                            <th>Catatan</th>
-                                            <th>Status</th>
-                                            <th>Tipe Jadwal</th>
-                                            <th>Tipe Shift</th>
-                                            {{-- <th>Jam Masuk</th>
-                                            <th>Jam Keluar</th> --}}
-                                            <th>Keterangan</th>
+                                            <th>ID</th>
+                                            <th>Tipe Izin</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -93,46 +87,21 @@
 @endsection
 
 @section('footer-scripts')
+<script src="{{asset('js/swal2.js')}}"></script>
 <!-- DataTables  & Plugins -->
 <script src="{{asset('adminlte/plugins/datatables/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
-{{-- <script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-<script src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-<script src="../../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-<script src="../../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-<script src="../../plugins/jszip/jszip.min.js"></script>
-<script src="../../plugins/pdfmake/pdfmake.min.js"></script>
-<script src="../../plugins/pdfmake/vfs_fonts.js"></script>
-<script src="../../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-<script src="../../plugins/datatables-buttons/js/buttons.print.min.js"></script>
-<script src="../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script> --}}
 <script>
 $(function () {
     $("#example1").DataTable({
         processing: true,
         serverSide: true,
-        ajax: 'presence_list/json',
+        ajax: 'leave/json',
         columns: [
-            { data: 'name', name: 'name'},
-            { data: 'email', name: 'email'},
-            { data: 'department_name', name: 'department_name'},
-            { data: 'date_time', name: 'date_time'},
-            { data: 'note', name: 'note'},
-            { data: 'status', name: 'status'},
-            { data: 'schedule_type_name', name: 'schedule_type_name'},
-            { data: 'nama_shift', name: 'nama_shift'},
-            // { data: 'jam_masuk', name: 'jam_masuk'},
-            // { data: 'jam_keluar', name: 'jam_keluar'},
-            { data: 'keterangan', name: 'keterangan'},
+            { data: 'id', name: 'id'},
+            { data: 'leave_name', name: 'leave_name'},
             { data: 'action', name: 'action', orderable: false, searchable: false},
         ],
-        createdRow: function ( row, data, index ) {
-            if(data.keterangan == "Late"){
-                $('td', row).eq(8).css('background-color', '#f70000');
-            } else if(data.keterangan == "Earlier"){
-                $('td', row).eq(8).css('background-color', '#f70000');
-            }
-        }
     });
 });
 </script>
